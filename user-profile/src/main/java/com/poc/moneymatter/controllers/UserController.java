@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("/api")
 public class UserController {
@@ -17,6 +19,12 @@ public class UserController {
     @ResponseBody
     public User getById(@PathVariable("email") String email) {
         return service.findByEmail(email);
+    }
+
+    @GetMapping(value = "/user")
+    @ResponseBody
+    public List<User> getAll() {
+        return service.findAll();
     }
 
     @PostMapping(value = "/user")
