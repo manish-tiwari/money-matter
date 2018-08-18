@@ -5,6 +5,7 @@ import com.poc.moneymatter.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -44,6 +45,7 @@ public class UserController {
     @PutMapping(value = "/user")
     @ResponseBody
     public User update(@RequestBody User user) {
+        if (StringUtils.isEmpty(user.getId())) throw new IllegalArgumentException("Invalid UserID !");
         return service.save(user);
     }
 }
