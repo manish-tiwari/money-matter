@@ -24,8 +24,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
 @RunWith(SpringRunner.class)
@@ -43,7 +42,7 @@ public class UserControllerTest {
     private WebApplicationContext webApplicationContext;
 
     @Autowired
-    ObjectMapper mapper;
+    private ObjectMapper mapper;
 
     private MockMvc mockMvc;
 
@@ -105,5 +104,21 @@ public class UserControllerTest {
         });
         Assert.assertEquals(2, users.size());
         Assert.assertEquals(user, users.get(0));
+    }
+
+    @Test
+    public void testDeleteUser() throws Exception {
+
+        MvcResult result = mockMvc.perform(
+                delete("/api/user/" + user.getId())
+        ).andReturn();
+
+        Assert.assertEquals(200, result.getResponse().getStatus());
+
+        MvcResult findAll = mockMvc.perform(
+                get("/api/user/user.email@poc.com")
+        ).andReturn();
+
+        Assert.assertEquals("", result.getResponse().getContentAsString());
     }
 }
