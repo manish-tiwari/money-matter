@@ -1,5 +1,6 @@
 package com.poc.moneymatter.controllers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.poc.moneymatter.dao.entity.User;
@@ -104,6 +105,21 @@ public class UserControllerTest {
         });
         Assert.assertEquals(2, users.size());
         Assert.assertEquals(user, users.get(0));
+    }
+
+    @Test
+    public void testUpdateUser() throws Exception {
+
+        user.setEmail("updatedEmail@poc.com");
+        MvcResult result = mockMvc.perform(
+                put("/api/user")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(user))
+        ).andReturn();
+
+        Assert.assertEquals(200, result.getResponse().getStatus());
+        final User actual = mapper.readValue(result.getResponse().getContentAsString(), User.class);
+        Assert.assertEquals("updatedEmail@poc.com", actual.getEmail());
     }
 
     @Test

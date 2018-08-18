@@ -40,4 +40,10 @@ public class UserController {
     public void remove(@PathVariable("id") String id) {
         service.delete(UUID.fromString(id));
     }
+
+    @PutMapping(value = "/user")
+    @ResponseBody
+    public User update(@RequestBody User user) {
+        return service.save(user);
+    }
 }
