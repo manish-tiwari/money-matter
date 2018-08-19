@@ -8,7 +8,9 @@ import com.poc.moneymatter.dao.repository.UserRepository;
 import com.poc.moneymatter.services.UserService;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +50,9 @@ public class UserControllerTest {
     private MockMvc mockMvc;
 
     private User user;
+
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
 
     @Before
     public void setUp() {
@@ -120,6 +125,21 @@ public class UserControllerTest {
         Assert.assertEquals(200, result.getResponse().getStatus());
         final User actual = mapper.readValue(result.getResponse().getContentAsString(), User.class);
         Assert.assertEquals("updatedEmail@poc.com", actual.getEmail());
+    }
+
+    @Test
+    public void testUpdateForInvalidUser() throws Exception {
+
+
+        user.setId(null);
+        thrown.expect(org.springframework.web.util.NestedServletException.class);
+        thrown.expectMessage("User doesn't exist !");
+        mockMvc.perform(
+                put("/api/user")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(user))
+        );
+
     }
 
     @Test

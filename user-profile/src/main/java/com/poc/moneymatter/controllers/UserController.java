@@ -45,7 +45,7 @@ public class UserController {
     @PutMapping(value = "/user")
     @ResponseBody
     public User update(@RequestBody User user) {
-        if (StringUtils.isEmpty(user.getId())) throw new IllegalArgumentException("Invalid UserID !");
+        if (StringUtils.isEmpty(user.getId())) throw new IllegalArgumentException("User doesn't exist !");
         return service.save(user);
     }
 }
