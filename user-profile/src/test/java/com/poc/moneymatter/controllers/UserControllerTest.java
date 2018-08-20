@@ -1,13 +1,13 @@
 package com.poc.moneymatter.controllers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.poc.moneymatter.dao.entity.User;
 import com.poc.moneymatter.dao.repository.UserRepository;
 import com.poc.moneymatter.services.UserService;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +24,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
 @RunWith(SpringRunner.class)
@@ -43,11 +42,14 @@ public class UserControllerTest {
     private WebApplicationContext webApplicationContext;
 
     @Autowired
-    ObjectMapper mapper;
+    private ObjectMapper mapper;
 
     private MockMvc mockMvc;
 
     private User user;
+
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
 
     @Before
     public void setUp() {
@@ -105,5 +107,52 @@ public class UserControllerTest {
         });
         Assert.assertEquals(2, users.size());
         Assert.assertEquals(user, users.get(0));
+    }
+
+    @Test
+    public void testUpdateUser() throws Exception {
+
+        user.setEmail("updatedEmail@poc.com");
+        MvcResult result = mockMvc.perform(
+                put("/api/user")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(user))
+        ).andReturn();
+
+        Assert.assertEquals(200, result.getResponse().getStatus());
+        final User actual = mapper.readValue(result.getResponse().getContentAsString(), User.class);
+        Assert.assertEquals("updatedEmail@poc.com", actual.getEmail());
+    }
+
+    @Test
+    @Ignore(value = "Ignore this test as we will add common error handler soon")
+    public void testUpdateForInvalidUser() throws Exception {
+
+
+        user.setId(null);
+        thrown.expect(org.springframework.web.util.NestedServletException.class);
+        thrown.expectMessage("User doesn't exist !");
+        mockMvc.perform(
+                put("/api/user")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(user))
+        );
+
+    }
+
+    @Test
+    public void testDeleteUser() throws Exception {
+
+        MvcResult result = mockMvc.perform(
+                delete("/api/user/" + user.getId())
+        ).andReturn();
+
+        Assert.assertEquals(200, result.getResponse().getStatus());
+
+        MvcResult findAll = mockMvc.perform(
+                get("/api/user/user.email@poc.com")
+        ).andReturn();
+
+        Assert.assertEquals("", result.getResponse().getContentAsString());
     }
 }
