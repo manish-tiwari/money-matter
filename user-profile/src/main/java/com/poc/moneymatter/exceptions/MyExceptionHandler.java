@@ -26,4 +26,10 @@ public class MyExceptionHandler {
     public MoneyMatterErrorResponse noHandlerFoundException(Exception ex) {
         return new MoneyMatterErrorResponse("Exception handler not found",  ex.getMessage(),"Internal error occurerd, please contact money-matter admin.", 500, new Date());
     }
+
+    @ExceptionHandler(value = UserNotFoundException.class)
+    @ResponseStatus(value = HttpStatus.NOT_FOUND)
+    public MoneyMatterErrorResponse handleUserNotFoundException(UserNotFoundException ex) {
+        return new MoneyMatterErrorResponse("UserNotFoundException", "Entity not found.", ex.getMessage(), 404, new Date());
+    }
 }
