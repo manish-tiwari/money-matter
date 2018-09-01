@@ -32,4 +32,10 @@ public class MyExceptionHandler {
     public MoneyMatterErrorResponse handleUserNotFoundException(UserNotFoundException ex) {
         return new MoneyMatterErrorResponse("UserNotFoundException", "Entity not found.", ex.getMessage(), 404, new Date());
     }
+
+    @ExceptionHandler(value = UserAlreadyExistsException.class)
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    public MoneyMatterErrorResponse handleUserExistsException(UserAlreadyExistsException ex) {
+        return new MoneyMatterErrorResponse("UserAlreadyExistsException", "Constraint Voilation", ex.getMessage(), 400, new Date());
+    }
 }

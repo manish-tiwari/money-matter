@@ -1,7 +1,7 @@
 package com.poc.moneymatter.exceptions;
 
 public class UserNotFoundException extends RuntimeException {
-    public UserNotFoundException(String exception) {
+    public UserNotFoundException(String message) {
         super();
     }
 
