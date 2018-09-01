@@ -61,6 +61,9 @@ public class UserControllerTest {
         user = new User(UUID.randomUUID(), "User 1", 49, "user.email@poc.com", "Male", true);
         User user2 = new User(UUID.randomUUID(), "User 2", 55, "user2.email@poc.com", "Female", true);
 
+        Mockito.when(userRepository.findById(user.getId()))
+                .thenReturn(java.util.Optional.ofNullable(user));
+
         Mockito.when(userRepository.findByEmail(user.getEmail()))
                 .thenReturn(user);
 
@@ -85,10 +88,21 @@ public class UserControllerTest {
     }
 
     @Test
+    public void testFindUserById() throws Exception {
+
+        MvcResult result = mockMvc.perform(
+                get("/api/user/id/"+user.getId())
+        ).andReturn();
+
+        Assert.assertEquals(200, result.getResponse().getStatus());
+        Assert.assertEquals(user, mapper.readValue(result.getResponse().getContentAsString(), User.class));
+    }
+
+    @Test
     public void testFindUserByEmailId() throws Exception {
 
         MvcResult result = mockMvc.perform(
-                get("/api/user/user.email@poc.com")
+                get("/api/user/email/user.email@poc.com")
         ).andReturn();
 
         Assert.assertEquals(200, result.getResponse().getStatus());
@@ -99,7 +113,7 @@ public class UserControllerTest {
     public void testFindAllUsers() throws Exception {
 
         MvcResult result = mockMvc.perform(
-                get("/api/user")
+                get("/api/users")
         ).andReturn();
 
         Assert.assertEquals(200, result.getResponse().getStatus());
@@ -147,7 +161,7 @@ public class UserControllerTest {
                 delete("/api/user/" + user.getId())
         ).andReturn();
 
-        Assert.assertEquals(200, result.getResponse().getStatus());
+        Assert.assertEquals(204, result.getResponse().getStatus());
 
         MvcResult findAll = mockMvc.perform(
                 get("/api/user/user.email@poc.com")
