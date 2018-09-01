@@ -80,7 +80,7 @@ public class UserControllerTest {
                         .content(mapper.writeValueAsString(user))
         ).andReturn();
 
-        Assert.assertEquals(200, result.getResponse().getStatus());
+        Assert.assertEquals(201, result.getResponse().getStatus());
         Assert.assertEquals(user, mapper.readValue(result.getResponse().getContentAsString(), User.class));
     }
 
