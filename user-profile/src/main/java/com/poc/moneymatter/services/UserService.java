@@ -2,8 +2,10 @@ package com.poc.moneymatter.services;
 
 import com.poc.moneymatter.dao.entity.User;
 import com.poc.moneymatter.dao.repository.UserRepository;
+import com.poc.moneymatter.exceptions.UserAlreadyExistsException;
 import com.poc.moneymatter.exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,7 +19,13 @@ public class UserService {
     private UserRepository repository;
 
     public User save(User user) {
-        return repository.save(user);
+        try {
+            return repository.save(user);
+        } catch (DataIntegrityViolationException e) {
+            e.printStackTrace();
+            throw new UserAlreadyExistsException("User already exists with email ID:'" + user.getEmail() + "'");
+        }
+
     }
 
     public User findByEmail(String email) {

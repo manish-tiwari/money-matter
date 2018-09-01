@@ -46,7 +46,7 @@ public class UserControllerTest {
 
     private MockMvc mockMvc;
 
-    private User user;
+    private User user,user2;
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
@@ -59,7 +59,7 @@ public class UserControllerTest {
         }
 
         user = new User(UUID.randomUUID(), "User 1", 49, "user.email@poc.com", "Male", true);
-        User user2 = new User(UUID.randomUUID(), "User 2", 55, "user2.email@poc.com", "Female", true);
+        user2 = new User(UUID.randomUUID(), "User 2", 55, "user2.email@poc.com", "Female", true);
 
         Mockito.when(userRepository.findById(user.getId()))
                 .thenReturn(java.util.Optional.ofNullable(user));
