@@ -14,7 +14,7 @@ public class MyExceptionHandler {
 
     @ExceptionHandler(MoneyMatterUserException.class)
     @ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY)
-    public MoneyMatterErrorResponse handleIllegalArgumentException(MoneyMatterUserException ex) {
+    public MoneyMatterErrorResponse handleMoneyMatterUserException(MoneyMatterUserException ex) {
 
         // build a response body out of ex, and return that
         return new MoneyMatterErrorResponse("MoneyMatterUserException", "Unprocessable Entity.", ex.getMessage(),  422,new Date());
