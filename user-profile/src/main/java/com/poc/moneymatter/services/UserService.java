@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -28,14 +29,18 @@ public class UserService {
 
     }
 
-    public User findByEmail(String email) {
-        return repository.findByEmail(email);
+    public List<User> findByEmail(String email) {
+        List<User> users = new ArrayList<>();
+        users.add(repository.findByEmail(email));
+        return users;
     }
 
-    public User findById(UUID id) {
+    public List<User> findById(UUID id) {
+        List<User> users = new ArrayList<>();
         Optional<User> user=repository.findById(id);
         if(!user.isPresent()) throw new UserNotFoundException("User does not exist !");
-        return user.get();
+        users.add(user.get());
+        return users;
     }
 
     public List<User> findAll() {

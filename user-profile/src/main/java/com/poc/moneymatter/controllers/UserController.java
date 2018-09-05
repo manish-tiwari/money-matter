@@ -19,7 +19,7 @@ public class UserController {
     @Autowired
     private UserService service;
 
-    @GetMapping(value = "/users/email/{email}")
+ /*   @GetMapping(value = "/users/email/{email}")
     @ResponseBody
     public User getByEmail(@PathVariable("email") String email) {
         return service.findByEmail(email);
@@ -29,11 +29,13 @@ public class UserController {
     @ResponseBody
     public User getById(@PathVariable("id") String id) {
         return service.findById(UUID.fromString(id));
-    }
+    }*/
 
     @GetMapping(value = "/users")
     @ResponseBody
-    public List<User> getAll() {
+    public List<User> getAll(@RequestParam(value="email", required=false) String email, @RequestParam(value="id", required=false) String id) {
+        if (StringUtils.isEmpty(email) && !StringUtils.isEmpty(id)) return service.findById(UUID.fromString(id)) ;
+        else if(!StringUtils.isEmpty(email)) return service.findByEmail(email);
         return service.findAll();
     }
 
