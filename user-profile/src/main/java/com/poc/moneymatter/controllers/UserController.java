@@ -19,13 +19,13 @@ public class UserController {
     @Autowired
     private UserService service;
 
-    @GetMapping(value = "/user/email/{email}")
+    @GetMapping(value = "/users/email/{email}")
     @ResponseBody
     public User getByEmail(@PathVariable("email") String email) {
         return service.findByEmail(email);
     }
 
-    @GetMapping(value = "/user/id/{id}")
+    @GetMapping(value = "/users/id/{id}")
     @ResponseBody
     public User getById(@PathVariable("id") String id) {
         return service.findById(UUID.fromString(id));
@@ -37,20 +37,20 @@ public class UserController {
         return service.findAll();
     }
 
-    @PostMapping(value = "/user")
+    @PostMapping(value = "/users")
     @ResponseBody
     @ResponseStatus(HttpStatus.CREATED)
     public User save(@RequestBody User user) {
         return service.save(user);
     }
 
-    @DeleteMapping(value = "/user/{id}")
+    @DeleteMapping(value = "/users/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void remove(@PathVariable("id") String id) {
         service.delete(UUID.fromString(id));
     }
 
-    @PutMapping(value = "/user")
+    @PutMapping(value = "/users")
     @ResponseBody
     public User update(@RequestBody User user) {
         if (StringUtils.isEmpty(user.getId())) throw new MoneyMatterUserException("Pease provide User ID !");
