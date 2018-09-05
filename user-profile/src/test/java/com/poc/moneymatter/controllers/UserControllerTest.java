@@ -78,7 +78,7 @@ public class UserControllerTest {
     public void testSaveUser() throws Exception {
 
         MvcResult result = mockMvc.perform(
-                post("/api/user")
+                post("/api/users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(user))
         ).andReturn();
@@ -91,7 +91,7 @@ public class UserControllerTest {
     public void testFindUserById() throws Exception {
 
         MvcResult result = mockMvc.perform(
-                get("/api/user/id/"+user.getId())
+                get("/api/users?id="+user.getId())
         ).andReturn();
 
         Assert.assertEquals(200, result.getResponse().getStatus());
@@ -102,7 +102,7 @@ public class UserControllerTest {
     public void testFindUserByEmailId() throws Exception {
 
         MvcResult result = mockMvc.perform(
-                get("/api/user/email/user.email@poc.com")
+                get("/api/users?email=user.email@poc.com")
         ).andReturn();
 
         Assert.assertEquals(200, result.getResponse().getStatus());
@@ -128,7 +128,7 @@ public class UserControllerTest {
 
         user.setEmail("updatedEmail@poc.com");
         MvcResult result = mockMvc.perform(
-                put("/api/user")
+                put("/api/users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(user))
         ).andReturn();
@@ -147,7 +147,7 @@ public class UserControllerTest {
         thrown.expect(org.springframework.web.util.NestedServletException.class);
         thrown.expectMessage("User doesn't exist !");
         mockMvc.perform(
-                put("/api/user")
+                put("/api/users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(user))
         );
@@ -158,13 +158,13 @@ public class UserControllerTest {
     public void testDeleteUser() throws Exception {
 
         MvcResult result = mockMvc.perform(
-                delete("/api/user/" + user.getId())
+                delete("/api/users/" + user.getId())
         ).andReturn();
 
         Assert.assertEquals(204, result.getResponse().getStatus());
 
         MvcResult findAll = mockMvc.perform(
-                get("/api/user/user.email@poc.com")
+                get("/api/users/user.email@poc.com")
         ).andReturn();
 
         Assert.assertEquals("", result.getResponse().getContentAsString());
