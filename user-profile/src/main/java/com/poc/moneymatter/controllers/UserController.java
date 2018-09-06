@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -33,9 +34,14 @@ public class UserController {
 
     @GetMapping(value = "/users")
     @ResponseBody
-    public List<User> getAll(@RequestParam(value="email", required=false) String email, @RequestParam(value="id", required=false) String id) {
+    public List<User> getUsers(@RequestParam(value="email", required=false) String email, @RequestParam(value="id", required=false) String id) {
         if (StringUtils.isEmpty(email) && !StringUtils.isEmpty(id)) return service.findById(UUID.fromString(id)) ;
-        else if(!StringUtils.isEmpty(email)) return service.findByEmail(email);
+        else if(!StringUtils.isEmpty(email) && StringUtils.isEmpty(id)) return service.findByEmail(email);
+        else if(!StringUtils.isEmpty(email) && !StringUtils.isEmpty(id)) {
+            List<User> users = service.findByEmail(email);
+            users.addAll(service.findById(UUID.fromString(id)));
+            return users;
+        }
         return service.findAll();
     }
 
