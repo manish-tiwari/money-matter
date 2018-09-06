@@ -95,7 +95,10 @@ public class UserControllerTest {
         ).andReturn();
 
         Assert.assertEquals(200, result.getResponse().getStatus());
-        Assert.assertEquals(user, mapper.readValue(result.getResponse().getContentAsString(), User.class));
+        List<User> users = mapper.readValue(result.getResponse().getContentAsString(), new TypeReference<List<User>>() {
+        });
+        Assert.assertEquals(1, users.size());
+        Assert.assertEquals(user, users.get(0));
     }
 
     @Test
@@ -106,7 +109,10 @@ public class UserControllerTest {
         ).andReturn();
 
         Assert.assertEquals(200, result.getResponse().getStatus());
-        Assert.assertEquals(user, mapper.readValue(result.getResponse().getContentAsString(), User.class));
+        List<User> users = mapper.readValue(result.getResponse().getContentAsString(), new TypeReference<List<User>>() {
+        });
+        Assert.assertEquals(1, users.size());
+        Assert.assertEquals(user, users.get(0));
     }
 
     @Test
